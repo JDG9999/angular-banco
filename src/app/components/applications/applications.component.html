@@ -1,0 +1,13 @@
+<div>
+  <tabset>
+    <tab heading="Aprobadas">
+      <app-applications-table [status]="applicationStatus.APPROVED"></app-applications-table>
+    </tab>
+    <tab heading="Pagadas">
+      <app-applications-table [status]="applicationStatus.PAID"></app-applications-table>
+    </tab>
+    <tab heading="Rechazadas">
+      <app-applications-table [status]="applicationStatus.REJECTED"></app-applications-table>
+    </tab>
+  </tabset>
+</div>

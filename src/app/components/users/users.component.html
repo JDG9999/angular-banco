@@ -1,0 +1,21 @@
+<h2>Lista de usuarios</h2>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th>Nombre</th>
+      <th>Correo</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td scope="row">{{user.id}}</td>
+      <td>{{user.name}}</td>
+      <td>{{user.email}}</td>
+      <td>
+        <button class="btn btn-success" [routerLink]="['/usuarios', user.id]">Ver historial</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

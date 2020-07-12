@@ -1,0 +1,20 @@
+<table class="table table-hover mt-2">
+  <thead>
+    <tr>
+      <th scope="col">Usuario</th>
+      <th>Monto</th>
+      <th>Fecha de pago</th>
+      <th *ngIf="paymentPending()">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let app of applications; index as i">
+      <td>{{app.user.id}} - {{app.user.name}}</td>
+      <td>${{app.amount | currency:'COP'}}</td>
+      <td>{{app.paydate | date: 'dd MMMM yyyy' : 'GMT-5' : 'es'}}</td>
+      <td *ngIf="paymentPending()">
+        <button class="btn btn-success" (click)="payLoan(app)">Pagar!</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

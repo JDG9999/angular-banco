@@ -1,0 +1,28 @@
+<h2>Historial de usuario ID #{{userId}}</h2>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Monto</th>
+      <th scope="col">Fecha de pago</th>
+      <th scope="col">Aprovado</th>
+      <th scope="col">Pagado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let app of applications; index as i">
+      <td scope="row">{{i+1}}</td>
+      <td>${{app.amount | currency:'COP'}}</td>
+      <td>{{app.paydate | date: 'dd MMMM yyyy' : 'GMT-5' : 'es'}}</td>
+      <td>
+        <span *ngIf="app.approved" class="good">SÍ</span>
+        <span *ngIf="!app.approved" class="bad">NO</span>
+      </td>
+      <td>
+        <span *ngIf="app.paid" class="good">SÍ</span>
+        <span *ngIf="app.paid === false" class="bad">NO</span>
+        <span *ngIf="app.paid === undefined" class="na">-</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
