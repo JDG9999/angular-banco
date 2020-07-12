@@ -4,6 +4,8 @@ import { User } from '../models/user';
 import { Application } from '../models/application';
 import { ApplicationStatus } from '../models/enums/application-status';
 import { Subject } from 'rxjs';
+import { UtilService } from './util.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,7 @@ export class ApiService {
 
   applicationsChanged = new Subject<void>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private utilService: UtilService) { }
 
   fetchData() {
     const userA = new User('Juan', '123', 'a@mail');
@@ -50,6 +52,8 @@ export class ApiService {
 
   payLoan(app: Application) {
     app.paid = true;
+    environment.bankCapital += app.amount;
+    this.utilService.capitalChanged.next();
     this.applicationsChanged.next();
   }
 

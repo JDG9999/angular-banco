@@ -6,8 +6,9 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CreditApprovalMessageComponent } from '../credit-approval-message/credit-approval-message.component';
 import { ApiService } from 'src/app/services/api.service';
 import { Application } from 'src/app/models/application';
-import { environment } from './../../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { User } from 'src/app/models/user';
+import { UtilService } from 'src/app/services/util.service';
 
 @Component({
   selector: 'app-credit-form',
@@ -22,10 +23,10 @@ export class CreditFormComponent implements OnInit {
 
   applications: Application[];
   users: User[];
-  bankCapital: number;
 
   constructor(
     private apiService: ApiService,
+    private utilService: UtilService,
     private localeService: BsLocaleService,
     private modalService: BsModalService
   ) { }
@@ -33,7 +34,6 @@ export class CreditFormComponent implements OnInit {
   ngOnInit() {
     this.applications = this.apiService.applications;
     this.users = this.apiService.users;
-    this.bankCapital = environment.bankCapital;
     this.initCreditForm();
     this.setupDatepicker();
   }
@@ -59,7 +59,7 @@ export class CreditFormComponent implements OnInit {
     let resultMsg = '';
     let approved = true;
     // check if the bank has funds
-    if (info.amount > this.bankCapital) {
+    if (info.amount > environment.bankCapital) {
       approved = false;
       resultTitle = 'RECHAZADO :(';
       resultMsg = 'Actualmente no contamos con suficiente dinero.';
@@ -93,7 +93,8 @@ export class CreditFormComponent implements OnInit {
     }
     // store application
     if (approved) {
-      this.bankCapital -= info.amount;
+      environment.bankCapital -= info.amount;
+      this.utilService.capitalChanged.next();
     }
     info.approved = approved;
     this.apiService.storeApplication(info);
@@ -103,7 +104,7 @@ export class CreditFormComponent implements OnInit {
   verifyPaidLoans(userLoans) {
     let paid = true;
     userLoans.forEach(loan => {
-      if (!loan.paid) {
+      if (loan.approved && !loan.paid) {
         paid = false;
       }
     });
@@ -116,7 +117,7 @@ export class CreditFormComponent implements OnInit {
       if (loan.approved) {
         prev = true;
       }
-    })
+    });
     return prev;
   }
 
